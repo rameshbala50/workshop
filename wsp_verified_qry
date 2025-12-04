@@ -1,0 +1,26 @@
+use schema dash_db_si.retail;
+
+WITH monthly_sales AS (
+  SELECT
+    p.category,
+    DATE_TRUNC('MONTH', s.date) AS month,
+    SUM(s.sales_amount) AS monthly_sales
+  FROM
+    sales AS s
+    INNER JOIN products AS p ON s.product_id = p.product_id
+  WHERE
+    s.date >= '2025-06-01'
+    AND s.date < '2025-09-01'
+  GROUP BY
+    p.category,
+    DATE_TRUNC('MONTH', s.date)
+)
+SELECT
+  category,
+  month,
+  monthly_sales
+FROM
+  monthly_sales
+ORDER BY
+  category,
+  month
